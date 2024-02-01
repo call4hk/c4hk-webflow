@@ -256,3 +256,6 @@ const Previous = () => {
     <EventsPanel eventsList={allEventsList} showSync={false} />
   );
 };
+
+ReactDOM.render(<Upcoming />, document.getElementById('upcoming-events-container'));
+ReactDOM.render(<Previous />, document.getElementById('previous-events-container'));
