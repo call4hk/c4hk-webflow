@@ -6,18 +6,22 @@ const CurrentBillsPaging = () => {
   return <div>Current bills paging</div>
 };
 
+const CurrentBill = (props) => {
+  const { bill } = props;
+  return (
+    <div className='flex'>
+      <h2>{bill.bill_title}</h2>
+      <p>{bill.sponsor_name}</p>
+    </div>
+  );
+};
+
 const CurrentBillsContent = (props) => {
   const { bills } = props;
 
-  const CurrentBill = (props) => {
-    const { bill } = props;
-    return (
-      <div className='flex'>
-        <h2>{bill.bill_title}</h2>
-        <p>{bill.sponsor_name}</p>
-      </div>
-    );
-  };
+  if (!bills) {
+    return null;
+  }
 
   return (
     bills.map(bill => {
@@ -61,7 +65,7 @@ const CurrentBills = () => {
     });
   }, []);
 
-  return <CurrentBillsPanel />;
+  return <CurrentBillsPanel bills={allBills} />;
 };
 
 const PreviousBills = () => {
@@ -74,7 +78,7 @@ const PreviousBills = () => {
     });
   }, []);
 
-  return <PreviousBillsPanel />;
+  return <PreviousBillsPanel bills={allBills} />;
 };
 
 ReactDOM.render(<CurrentBills />, document.getElementById('current-bills-container'));
