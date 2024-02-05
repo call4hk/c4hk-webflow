@@ -33,17 +33,19 @@ const CurrentBillsContent = (props) => {
   );
 };
 
-const CurrentBillsPanel = () => {
+const CurrentBillsPanel = (props) => {
+  const { bills } = props;
   return (
     <div className='flex'>
       <BillsControl />
-      <CurrentBillsContent />
+      <CurrentBillsContent bills={bills} />
       <CurrentBillsPaging />
     </div>
   );
 };
 
-const PreviousBillsPanel = () => {
+const PreviousBillsPanel = (props) => {
+  const { bills } = props;
   return <div>previous</div>;
   /*
   return (
