@@ -1,6 +1,34 @@
+const BillsControl = () => {
+  return <div>Bills control</div>;
+};
+
+const CurrentBillsPaging = () => {
+  return <div>Current bills paging</div>
+};
+
+const CurrentBillsContent = (props) => {
+  const { bills } = props;
+
+  const CurrentBill = (props) => {
+    const { bill } = props;
+    return (
+      <div className='flex'>
+        <h2>{bill.bill_title}</h2>
+        <p>{bill.sponsor_name}</p>
+      </div>
+    );
+  };
+
+  return (
+    bills.map(bill => {
+      return (
+        <CurrentBill bill={bill} />
+      )
+    })
+  );
+};
+
 const CurrentBillsPanel = () => {
-  return <div>current</div>;
-  /*
   return (
     <div className='flex'>
       <BillsControl />
@@ -8,7 +36,6 @@ const CurrentBillsPanel = () => {
       <CurrentBillsPaging />
     </div>
   );
-  */
 };
 
 const PreviousBillsPanel = () => {
