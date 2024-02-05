@@ -18,6 +18,7 @@ const CurrentBill = (props) => {
 
 const CurrentBillsContent = (props) => {
   const { bills } = props;
+  console.log('current bills content', props);
 
   if (!bills) {
     return null;
