@@ -231,7 +231,7 @@ const Upcoming = () => {
   const [allEventsList, setAllEventsList] = React.useState([]);
 
   React.useEffect(() => {
-    const events = getEndpoint('events').then(events => {
+    getEndpoint('events').then(events => {
       setAllEventsList(events);
     });
   }, []);
@@ -245,7 +245,7 @@ const Previous = () => {
   const [allEventsList, setAllEventsList] = React.useState([]);
 
   React.useEffect(() => {
-    const events = getEndpoint('events', 'past').then(events => {
+    getEndpoint('events', 'past').then(events => {
       setAllEventsList(events);
     });
   }, []);
