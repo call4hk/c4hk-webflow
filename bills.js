@@ -6,6 +6,10 @@ const CurrentBillsPaging = () => {
   return <div>Current bills paging</div>
 };
 
+const PreviousBillsPaging = () => {
+  return <div>Previous bills paging</div>
+};
+
 const BillPill = (props) => {
   const text = props.text;
   return (
@@ -45,6 +49,53 @@ const CurrentBillsContent = (props) => {
   );
 };
 
+const PreviousBillsTable = (props) => {
+  const { bills } = props;
+  console.log('previous bills content', props);
+
+  if (!bills) {
+    return null;
+  }
+
+  const TableHeader = () => {
+    return (
+      <div className='flex flex-row'>
+        <p style={{ flexBasis: '12%' }}>Bills No.</p>
+        <p style={{ flexBasis: '40%' }}>Bills Name</p>
+        <p style={{ flexBasis: '12%' }}>Sponsor</p>
+        <p style={{ flexBasis: '12%' }}>Status</p>
+        <p style={{ flexBasis: '6%' }}>Term</p>
+        <p style={{ flexBasis: '18%' }}>Link to Congress.gov</p>
+      </div>
+    );
+  };
+
+  const TableRow = (props) => {
+    const { bill } = props;
+    return (
+      <div className='flex flex-row'>
+        <p style={{ flexBasis: '12%' }}>{bill.bill_code}</p>
+        <p style={{ flexBasis: '40%' }}>{bill.bill_title}</p>
+        <p style={{ flexBasis: '12%' }}>{bill.sponsor_name}</p>
+        <p style={{ flexBasis: '12%' }}>{bill.status}</p>
+        <p style={{ flexBasis: '6%' }}>{bill.congress_term}</p>
+        <p style={{ flexBasis: '18%' }}>{bill.url}</p>
+      </div>
+    );
+  };
+
+  return (
+    <div className='flex flex-col'>
+      <TableHeader />
+      {
+        bills.map(bill => {
+          return <TableRow bill={bill} />
+        })
+      }
+    </div>
+  );
+};
+
 const CurrentBillsPanel = (props) => {
   const { bills } = props;
   return (
@@ -58,16 +109,13 @@ const CurrentBillsPanel = (props) => {
 
 const PreviousBillsPanel = (props) => {
   const { bills } = props;
-  return <div>previous</div>;
-  /*
   return (
-    <div className='flex'>
+    <div className='flex flex-col'>
       <BillsControl />
-      <PreviousBillsContent />
+      <PreviousBillsTable bills={bills} />
       <PreviousBillsPaging />
     </div>
   );
-  */
 };
 
 const CurrentBills = () => {
