@@ -59,7 +59,7 @@ const PreviousBillsTable = (props) => {
 
   const TableHeader = () => {
     return (
-      <div className='flex flex-row'>
+      <div className='flex flex-row' style={{ backgroundColor: '#fcbc22' }}>
         <p style={{ flexBasis: '12%' }}>Bills No.</p>
         <p style={{ flexBasis: '40%' }}>Bills Name</p>
         <p style={{ flexBasis: '12%' }}>Sponsor</p>
@@ -73,7 +73,7 @@ const PreviousBillsTable = (props) => {
   const TableRow = (props) => {
     const { bill } = props;
     return (
-      <div className='flex flex-row'>
+      <div className='flex flex-row previous-bills-table-row-bg'>
         <p style={{ flexBasis: '12%' }}>{bill.bill_code}</p>
         <p style={{ flexBasis: '40%' }}>{bill.bill_title}</p>
         <p style={{ flexBasis: '12%' }}>{bill.sponsor_name}</p>
