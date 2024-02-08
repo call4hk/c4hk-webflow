@@ -1,5 +1,123 @@
-const BillsControl = () => {
-  return <div>Bills control</div>;
+const DropdownControl = (props) => {
+  const { values, onControlUpdate } = props;
+  const [valuesObject, setValuesObject] = React.useState({});
+  const [expanded, setExpanded] = React.useState(false);
+
+  const onUpdate = (value, event) => {
+    const obj = Object.assign({}, valuesObject);
+    obj[value.value] = event.target.checked;
+    setValuesObject(obj);
+    onControlUpdate(obj);
+  };
+
+  const onDropdown = (expand) => {
+    setExpanded(expand);
+  };
+
+  const handleKeydown = (event) => {
+    if (expanded) {
+      if (event.code === 'Escape' || event.key === 'Escape') {
+        event.stopPropagation();
+        setExpanded(false);
+      }
+    }
+  };
+
+  return (
+    <div>
+      <button className='rounded-xl border px-2.5 py-2.5' onClick={() => onDropdown(!expanded)} onKeyDown={handleKeydown}>
+        Dropdown
+      </button>
+      {expanded &&
+        <div className='absolute z-10 rounded-lg border bg-white p-2'>
+          {values.map(value => {
+            return (
+              <div key={value} className='flex flex-row items-center'>
+                <input
+                  className='mr-2' type='checkbox'
+                  onChange={event => onUpdate(value, event)}
+                  checked={valuesObject[value.value]}
+                />
+                <p>{value.display}</p>
+              </div>
+            );
+          })}
+        </div>
+      }
+    </div>
+  );
+};
+
+const CurrentBillsControl = (props) => {
+  const { onUpdate } = props;
+  const values = [
+    {
+      display: 'Recommended',
+      value: 'recommended',
+    },
+    {
+      display: 'Latest Action - Newest to Oldest',
+      value: 'action-n2o',
+    },
+    {
+      display: 'Latest Action - Oldest to Newest',
+      value: 'action-o2n',
+    },
+    {
+      display: 'Total no. of co-sponsor - Most to Least',
+      value: 'sponsor-m2l',
+    },
+    {
+      display: 'Total no. of co-sponsor - Least to Most',
+      value: 'sponsor-l2m',
+    },
+  ];
+  return (
+    <div className='flex items-center'>
+      <span className='font-bold'>Sort:&nbsp;</span>
+      <DropdownControl values={values} onControlUpdate={onUpdate} />
+    </div>
+  );
+};
+
+const PreviousBillsControl = (props) => {
+  const { onUpdate } = props;
+  const values = [
+    {
+      display: 'All previous terms',
+      value: 'all-previous',
+    },
+    {
+      display: '117 (2021-2022)',
+      value: '117',
+    },
+    {
+      display: '116 (2020-2021)',
+      value: '116',
+    },
+    {
+      display: '115 (2019-2020)',
+      value: '115',
+    },
+    {
+      display: '114 (2018-2019)',
+      value: '114',
+    },
+    {
+      display: '113 (2017-2018)',
+      value: '113',
+    },
+    {
+      display: '112 (2016-2017)',
+      value: '112',
+    },
+  ];
+  return (
+    <div className='flex items-center'>
+      <span className='font-bold'>Filters:&nbsp;</span>
+      <DropdownControl values={values} onControlUpdate={onUpdate} />
+    </div>
+  );
 };
 
 const CurrentBillsPaging = () => {
@@ -59,12 +177,12 @@ const PreviousBillsTable = (props) => {
 
   const TableHeader = () => {
     return (
-      <div className='flex flex-row' style={{ backgroundColor: '#fcbc22' }}>
-        <p style={{ flexBasis: '12%' }}>Bills No.</p>
-        <p style={{ flexBasis: '40%' }}>Bills Name</p>
-        <p style={{ flexBasis: '12%' }}>Sponsor</p>
-        <p style={{ flexBasis: '12%' }}>Status</p>
-        <p style={{ flexBasis: '6%' }}>Term</p>
+      <div className='py-2.5 flex flex-row' style={{ backgroundColor: '#fcbc22' }}>
+        <p className='pl-2.5 pr-3.5' style={{ flexBasis: '12%' }}>Bills No.</p>
+        <p className='px-3.5' style={{ flexBasis: '40%' }}>Bills Name</p>
+        <p className='px-3.5' style={{ flexBasis: '12%' }}>Sponsor</p>
+        <p className='px-3.5' style={{ flexBasis: '12%' }}>Status</p>
+        <p className='px-3.5' style={{ flexBasis: '6%' }}>Term</p>
         <p style={{ flexBasis: '18%' }}>Link to Congress.gov</p>
       </div>
     );
@@ -72,14 +190,23 @@ const PreviousBillsTable = (props) => {
 
   const TableRow = (props) => {
     const { bill } = props;
+
+    const onLinkButton = (url) => {
+      window.open(url, '_blank', 'noopener');
+    };
+
     return (
-      <div className='flex flex-row previous-bills-table-row-bg'>
-        <p style={{ flexBasis: '12%' }}>{bill.bill_code}</p>
-        <p style={{ flexBasis: '40%' }}>{bill.bill_title}</p>
-        <p style={{ flexBasis: '12%' }}>{bill.sponsor_name}</p>
-        <p style={{ flexBasis: '12%' }}>{bill.status}</p>
-        <p style={{ flexBasis: '6%' }}>{bill.congress_term}</p>
-        <p style={{ flexBasis: '18%' }}>{bill.url}</p>
+      <div className='py-2.5 flex flex-row previous-bills-table-row-bg'>
+        <p className='pl-2.5 pr-3.5' style={{ flexBasis: '12%' }}>{bill.bill_code}</p>
+        <p className='px-3.5' style={{ flexBasis: '40%' }}>{bill.bill_title}</p>
+        <p className='px-3.5' style={{ flexBasis: '12%' }}>{bill.sponsor_name}</p>
+        <p className='px-3.5' style={{ flexBasis: '12%' }}>{bill.status}</p>
+        <p className='px-3.5' style={{ flexBasis: '6%' }}>{bill.congress_term}</p>
+        <div style={{ flexBasis: '18%' }}>
+          <button className='rounded-xl border px-2.5 py-2.5' style={{ borderColor: '#433059', fontColor: '#433059' }} onClick={() => onLinkButton(bill.url)}>
+            View bill in congress.gov
+          </button>
+        </div>
       </div>
     );
   };
@@ -98,9 +225,14 @@ const PreviousBillsTable = (props) => {
 
 const CurrentBillsPanel = (props) => {
   const { bills } = props;
+
+  const onControlUpdate = (control) => {
+    console.log('current control update', control)
+  };
+
   return (
     <div className='flex flex-col'>
-      <BillsControl />
+      <CurrentBillsControl onUpdate={onControlUpdate} />
       <CurrentBillsContent bills={bills} />
       <CurrentBillsPaging />
     </div>
@@ -109,9 +241,14 @@ const CurrentBillsPanel = (props) => {
 
 const PreviousBillsPanel = (props) => {
   const { bills } = props;
+
+  const onControlUpdate = (control) => {
+    console.log('previous control update', control)
+  };
+
   return (
     <div className='flex flex-col'>
-      <BillsControl />
+      <PreviousBillsControl onUpdate={onControlUpdate} />
       <PreviousBillsTable bills={bills} />
       <PreviousBillsPaging />
     </div>
