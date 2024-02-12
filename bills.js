@@ -49,7 +49,7 @@ const DropdownControl = (props) => {
 };
 
 const CurrentBillsControl = (props) => {
-  const { onUpdate } = props;
+  const { className, onUpdate } = props;
   const values = [
     {
       display: 'Recommended',
@@ -73,7 +73,7 @@ const CurrentBillsControl = (props) => {
     },
   ];
   return (
-    <div className='flex items-center'>
+    <div className={`flex items-center ${className}`}>
       <span className='font-bold'>Sort:&nbsp;</span>
       <DropdownControl values={values} onControlUpdate={onUpdate} />
     </div>
@@ -81,7 +81,7 @@ const CurrentBillsControl = (props) => {
 };
 
 const PreviousBillsControl = (props) => {
-  const { onUpdate } = props;
+  const { className, onUpdate } = props;
   const values = [
     {
       display: 'All previous terms',
@@ -113,7 +113,7 @@ const PreviousBillsControl = (props) => {
     },
   ];
   return (
-    <div className='flex items-center'>
+    <div className={`flex items-center ${className}`}>
       <span className='font-bold'>Filters:&nbsp;</span>
       <DropdownControl values={values} onControlUpdate={onUpdate} />
     </div>
@@ -232,7 +232,7 @@ const CurrentBillsPanel = (props) => {
 
   return (
     <div className='flex flex-col'>
-      <CurrentBillsControl onUpdate={onControlUpdate} />
+      <CurrentBillsControl className='justify-end my-7' onUpdate={onControlUpdate} />
       <CurrentBillsContent bills={bills} />
       <CurrentBillsPaging />
     </div>
@@ -248,7 +248,7 @@ const PreviousBillsPanel = (props) => {
 
   return (
     <div className='flex flex-col'>
-      <PreviousBillsControl onUpdate={onControlUpdate} />
+      <PreviousBillsControl className='justify-end my-7' onUpdate={onControlUpdate} />
       <PreviousBillsTable bills={bills} />
       <PreviousBillsPaging />
     </div>
