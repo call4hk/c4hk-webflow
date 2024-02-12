@@ -25,11 +25,11 @@ const DropdownControl = (props) => {
 
   return (
     <div>
-      <button className='rounded-xl border px-2.5 py-2.5' onClick={() => onDropdown(!expanded)} onKeyDown={handleKeydown}>
+      <button className='rounded-xl border bg-white px-2.5 py-2.5' onClick={() => onDropdown(!expanded)} onKeyDown={handleKeydown}>
         Dropdown
       </button>
       {expanded &&
-        <div className='absolute z-10 rounded-lg border bg-white p-2'>
+        <div className='absolute right-0 z-10 rounded-lg border bg-white p-2'>
           {values.map(value => {
             return (
               <div key={value} className='flex flex-row items-center'>
