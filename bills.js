@@ -80,7 +80,7 @@ const CurrentBillsControl = (props) => {
   );
 };
 
-const PreviousBillsControl = (props) => {
+const PreviousBillsFilter = (props) => {
   const { className, onUpdate } = props;
   const values = [
     {
@@ -124,8 +124,67 @@ const CurrentBillsPaging = () => {
   return <div>Current bills paging</div>
 };
 
-const PreviousBillsPaging = () => {
-  return <div>Previous bills paging</div>
+const PreviousBillsPaging = (props) => {
+  const { className, onRowsUpdate } = props;
+
+  const onRowsPerPageUpdate = (value) => {
+    onRowsUpdate(parseInt(value));
+  };
+
+  const onPageUpdate = () => {
+    console.log('on page update');
+  };
+
+  return (
+    <div className={`flex items-center ${className}`}>
+      <p>Rows per page:&nbsp;</p>
+      <select className='py-2 px-2 rounded-lg border' onChange={event => onRowsPerPageUpdate(event.target.value)}>
+        <option value='10' selected>10</option>
+        <option value='25'>25</option>
+        <option value='50'>50</option>
+        <option value='75'>75</option>
+      </select>
+
+      <div className='ml-8'>
+        <BillsPagination currentPage={1} totalPage={10} onPageUpdate={onPageUpdate} />
+      </div>
+
+    </div>
+  );
+};
+
+const BillsPagination = (props) => {
+  const { currentPage, totalPage, onPageUpdate } = props;
+
+  const pageUpdate = (pageNumber) => {
+    console.log('on page update', pageNumber);
+  };
+
+  const pageNumberList = [1, 2, 3];
+
+  return (
+    <div className='flex'>
+      {currentPage > 1 && <div role='button' className='w-8 h-8 flex pt-px justify-center items-center hover:bg-yellow-50 rounded-full' onClick={() => pageUpdate(currentPage - 1)}>
+        <span>&lt;</span>
+      </div>}
+
+      {pageNumberList.map(pageNum => {
+        let currentPageBg = '';
+        if (pageNum === currentPage) {
+          currentPageBg = 'bg-slate-50';
+        }
+        return (
+          <div role='button' className={`w-8 h-8 flex pt-px justify-center items-center hover:bg-yellow-50 rounded-full ${currentPageBg}`} onClick={() => pageUpdate(pageNum)}>
+            <span>{pageNum}</span>
+          </div>
+        );
+      })}
+
+      {currentPage < totalPage && <div role='button' className='w-8 h-8 flex pt-px justify-center items-center hover:bg-yellow-50 rounded-full' onClick={() => pageUpdate(currentPage + 1)}>
+        <span>&gt;</span>
+      </div>}
+    </div>
+  );
 };
 
 const BillPill = (props) => {
@@ -240,34 +299,45 @@ const CurrentBillsPanel = (props) => {
 };
 
 const PreviousBillsPanel = (props) => {
-  const { bills } = props;
+  const { bills: allBills } = props;
 
-  const onControlUpdate = (control) => {
-    console.log('previous control update', control)
+  const [filteredBills, setFilteredBills] = React.useState(allBills);
+  const [showBills, setShowBills] = React.useState([]);
+  const [pageNum, setPageNum] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  React.useEffect(() => {
+    setFilteredBills(allBills);
+    const showBills = allBills.slice(0, 10);
+    setShowBills(showBills);
+  }, [allBills]);
+
+  const onFilterUpdate = (filters) => {
+    const filteredBills = allBills.filter(bill => {
+      return !!filters[bill.congress_term];
+    });
+    setFilteredBills(filteredBills);
+    const showBills = filteredBills.slice(0, rowsPerPage);
+    setShowBills(showBills);
+  };
+
+  const onRowsUpdate = (value) => {
+    setRowsPerPage(value);
+    const showBills = filteredBills.slice(0, value);
+    setShowBills(showBills);
   };
 
   return (
     <div className='flex flex-col'>
-      <PreviousBillsControl className='justify-end my-7' onUpdate={onControlUpdate} />
-      <PreviousBillsTable bills={bills} />
-      <PreviousBillsPaging />
+      <PreviousBillsFilter className='justify-end my-7' onUpdate={onFilterUpdate} />
+      <PreviousBillsTable bills={showBills} />
+      <PreviousBillsPaging className='justify-end py-2.5 bg-white' onRowsUpdate={onRowsUpdate} />
     </div>
   );
 };
 
 const CurrentBills = () => {
-  const [allBills, setAllBills] = React.useState([
-    {
-      bill_title: 'test title',
-      sponsor_name: 'Test Sponsor',
-      status: 'Intro to House',
-    },
-    {
-      bill_title: 'test title 2',
-      sponsor_name: 'Test Sponsor2',
-      status: 'Intro to House',
-    }
-  ]);
+  const [allBills, setAllBills] = React.useState([]);
 
   React.useEffect(() => {
     getEndpoint('bills', 'current').then(bills => {
@@ -284,7 +354,7 @@ const PreviousBills = () => {
 
   React.useEffect(() => {
     getEndpoint('bills', 'past').then(bills => {
-      console.log('past bills', bills);
+      console.log('all past bills', bills);
       setAllBills(bills);
     });
   }, []);
