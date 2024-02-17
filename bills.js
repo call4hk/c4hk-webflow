@@ -25,7 +25,10 @@ const DropdownControl = (props) => {
 
   return (
     <div>
-      <button className='rounded-xl border bg-white px-2.5 py-2.5' onClick={() => onDropdown(!expanded)} onKeyDown={handleKeydown}>
+      <button className='rounded-xl border bg-white px-2.5 py-2.5'
+        onClick={() => onDropdown(!expanded)}
+        onKeyDown={handleKeydown}
+      >
         Dropdown
       </button>
       {expanded &&
@@ -125,30 +128,28 @@ const CurrentBillsPaging = () => {
 };
 
 const PreviousBillsPaging = (props) => {
-  const { className, onRowsUpdate } = props;
+  const { className, currentPage, totalPage, onRowsUpdate, onPageUpdate } = props;
 
   const onRowsPerPageUpdate = (value) => {
     onRowsUpdate(parseInt(value));
   };
 
-  const onPageUpdate = () => {
-    console.log('on page update');
+  const onPageNumberUpdate = (value) => {
+    onPageUpdate(value);
   };
 
   return (
     <div className={`flex items-center ${className}`}>
       <p>Rows per page:&nbsp;</p>
-      <select className='py-2 px-2 rounded-lg border' onChange={event => onRowsPerPageUpdate(event.target.value)}>
+      <select className='py-2 px-2 rounded-lg border select-dropdown-border' onChange={event => onRowsPerPageUpdate(event.target.value)}>
         <option value='10' selected>10</option>
         <option value='25'>25</option>
         <option value='50'>50</option>
         <option value='75'>75</option>
       </select>
-
       <div className='ml-8'>
-        <BillsPagination currentPage={1} totalPage={10} onPageUpdate={onPageUpdate} />
+        <BillsPagination currentPage={currentPage} totalPage={totalPage} onPageUpdate={onPageNumberUpdate} />
       </div>
-
     </div>
   );
 };
@@ -157,10 +158,13 @@ const BillsPagination = (props) => {
   const { currentPage, totalPage, onPageUpdate } = props;
 
   const pageUpdate = (pageNumber) => {
-    console.log('on page update', pageNumber);
+    onPageUpdate(pageNumber);
   };
 
-  const pageNumberList = [1, 2, 3];
+  const pageNumberList = [];
+  for (let i = 0; i < totalPage; i++) {
+    pageNumberList.push(i + 1);
+  }
 
   return (
     <div className='flex'>
@@ -303,35 +307,53 @@ const PreviousBillsPanel = (props) => {
 
   const [filteredBills, setFilteredBills] = React.useState(allBills);
   const [showBills, setShowBills] = React.useState([]);
-  const [pageNum, setPageNum] = React.useState(0);
+  const [pageNum, setPageNum] = React.useState(1);
+  const [totalPage, setTotalPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   React.useEffect(() => {
+    setTotalPage(Math.ceil(allBills.length / 10));
     setFilteredBills(allBills);
     const showBills = allBills.slice(0, 10);
     setShowBills(showBills);
   }, [allBills]);
 
+  React.useEffect(() => {
+    const start = (pageNum - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const showBills = filteredBills.slice(start, end);
+    setShowBills(showBills);
+  }, [pageNum, rowsPerPage, filteredBills]);
+
   const onFilterUpdate = (filters) => {
     const filteredBills = allBills.filter(bill => {
       return !!filters[bill.congress_term];
     });
+    setTotalPage(Math.ceil(filteredBills.length / rowsPerPage));
+    setPageNum(1);
     setFilteredBills(filteredBills);
-    const showBills = filteredBills.slice(0, rowsPerPage);
-    setShowBills(showBills);
   };
 
   const onRowsUpdate = (value) => {
+    setTotalPage(Math.ceil(filteredBills.length / value));
     setRowsPerPage(value);
-    const showBills = filteredBills.slice(0, value);
-    setShowBills(showBills);
+  };
+
+  const onPageUpdate = (value) => {
+    setPageNum(value);
   };
 
   return (
     <div className='flex flex-col'>
       <PreviousBillsFilter className='justify-end my-7' onUpdate={onFilterUpdate} />
       <PreviousBillsTable bills={showBills} />
-      <PreviousBillsPaging className='justify-end py-2.5 bg-white' onRowsUpdate={onRowsUpdate} />
+      <PreviousBillsPaging
+        className='justify-end py-2.5 bg-white'
+        currentPage={pageNum}
+        totalPage={totalPage}
+        onRowsUpdate={onRowsUpdate}
+        onPageUpdate={onPageUpdate}
+      />
     </div>
   );
 };
