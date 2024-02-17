@@ -25,7 +25,10 @@ const DropdownControl = (props) => {
 
   return (
     <div>
-      <button className='rounded-xl border bg-white px-2.5 py-2.5' onClick={() => onDropdown(!expanded)} onKeyDown={handleKeydown}>
+      <button className='rounded-xl border bg-white px-2.5 py-2.5'
+        onClick={() => onDropdown(!expanded)}
+        onKeyDown={handleKeydown}
+      >
         Dropdown
       </button>
       {expanded &&
@@ -304,7 +307,7 @@ const PreviousBillsPanel = (props) => {
 
   const [filteredBills, setFilteredBills] = React.useState(allBills);
   const [showBills, setShowBills] = React.useState([]);
-  const [pageNum, setPageNum] = React.useState(0);
+  const [pageNum, setPageNum] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -316,7 +319,7 @@ const PreviousBillsPanel = (props) => {
   }, [allBills]);
 
   React.useEffect(() => {
-    const start = pageNum * rowsPerPage;
+    const start = (pageNum - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const showBills = filteredBills.slice(start, end);
     setShowBills(showBills);
@@ -327,6 +330,7 @@ const PreviousBillsPanel = (props) => {
       return !!filters[bill.congress_term];
     });
     setTotalPage(Math.ceil(filteredBills.length / rowsPerPage));
+    setPageNum(1);
     setFilteredBills(filteredBills);
   };
 
