@@ -141,7 +141,7 @@ const PreviousBillsPaging = (props) => {
   return (
     <div className={`flex items-center ${className}`}>
       <p>Rows per page:&nbsp;</p>
-      <select className='py-2 px-2 rounded-lg border select-dropdown-border' onChange={event => onRowsPerPageUpdate(event.target.value)}>
+      <select className='py-2 px-2 rounded-lg outline outline-1 select-dropdown-border' onChange={event => onRowsPerPageUpdate(event.target.value)}>
         <option value='10' selected>10</option>
         <option value='25'>25</option>
         <option value='50'>50</option>
@@ -266,7 +266,7 @@ const PreviousBillsTable = (props) => {
         <p className='px-3.5' style={{ flexBasis: '12%' }}>{bill.status}</p>
         <p className='px-3.5' style={{ flexBasis: '6%' }}>{bill.congress_term}</p>
         <div style={{ flexBasis: '18%' }}>
-          <button className='rounded-xl border px-2.5 py-2.5' style={{ borderColor: '#433059', fontColor: '#433059' }} onClick={() => onLinkButton(bill.url)}>
+          <button className='rounded-xl border border-solid px-2.5 py-2.5' style={{ borderColor: '#433059', fontColor: '#433059' }} onClick={() => onLinkButton(bill.url)}>
             View bill in congress.gov
           </button>
         </div>
