@@ -203,7 +203,7 @@ const BillPill = (props) => {
 const CurrentBill = (props) => {
   const { bill } = props;
   return (
-    <div className='flex flex-col mb-4 bg-white rounded-lg'>
+    <div className='flex flex-col p-4 mb-4 bg-white rounded-lg'>
       <h2 className='text-2xl font-bold'>{bill.bill_title}</h2>
       <p className='text-sm'>{bill.sponsor_name}</p>
       <div className='flex flex-row'>
@@ -277,11 +277,47 @@ const PreviousBillsTable = (props) => {
   return (
     <div className='flex flex-col'>
       <TableHeader />
-      {
-        bills.map(bill => {
-          return <TableRow bill={bill} />
-        })
-      }
+      {bills.map(bill => {
+        return <TableRow bill={bill} />;
+      })}
+    </div>
+  );
+};
+
+const PreviousBillsList = (props) => {
+  const { bills } = props;
+
+  const PreviousBillListing = (props) => {
+    const { bill } = props;
+    return (
+      <div className='p-2 rounded-lg bg-white mb-2'>
+        <p>{bill.bill_title}</p>
+        <span className='flex flex-row'>
+          <p className='font-bold'>Bills No.:&nbsp;</p>
+          <p>{bill.bill_code}</p>
+        </span>
+        <span className='flex flex-row'>
+          <p className='font-bold'>Sponsor:&nbsp;</p>
+          <p>{bill.sponsor_name}</p>
+        </span>
+        <span className='flex flex-row'>
+          <p className='font-bold'>Status:&nbsp;</p>
+          <p>{bill.status}</p>
+        </span>
+        <span className='flex flex-row'>
+          <p className='font-bold'>Term:&nbsp;</p>
+          <p>{bill.congress_term}</p>
+        </span>
+        <a target='_blank' href={bill.url}>View bill in Congress.gov</a>
+      </div>
+    );
+  };
+
+  return (
+    <div className='flex flex-col'>
+      {bills.map(bill => {
+        return <PreviousBillListing bill={bill} />;
+      })}
     </div>
   );
 };
@@ -346,7 +382,12 @@ const PreviousBillsPanel = (props) => {
   return (
     <div className='flex flex-col'>
       <PreviousBillsFilter className='justify-end my-7' onUpdate={onFilterUpdate} />
-      <PreviousBillsTable bills={showBills} />
+      <div className='hidden md:block'>
+        <PreviousBillsTable bills={showBills} />
+      </div>
+      <div className='block md:hidden'>
+        <PreviousBillsList bills={showBills} />
+      </div>
       <PreviousBillsPaging
         className='justify-end py-2.5 bg-white'
         currentPage={pageNum}
