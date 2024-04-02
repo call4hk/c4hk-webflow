@@ -18,7 +18,7 @@
         const searchParams = new URL(location.href).searchParams;
         if (location.href.match(/address=(\d+)/g)) {
             const addressInput = searchParams.get("address");
-            legislatorResult = await restApiRequest('POST', addressLookupUrl, { address: addressInput });
+            legislatorResult = await restApi('POST', addressLookupUrl, { address: addressInput });
 
             // TODO 
             let matches = addressInput.match(/[0-9]{5}/g);
@@ -26,13 +26,13 @@
         } else {
             requestedZipcode = searchParams.get("zipcode");
             const url = zipcodeLookupUrl + requestedZipcode.toString();
-            legislatorResult = await restApiRequest('GET', url);
+            legislatorResult = await restApi('GET', url);
         }
 
         const legislators = legislatorResult;
         const cardContainer = document.getElementById("Cards-Container");
 
-        currentBills = await restApiRequest('GET', currentBillsUrl);
+        currentBills = await restApi('GET', currentBillsUrl);
         currentBillCode = []
         sponsorIds = []
         currentBills.forEach(cb => {
@@ -86,7 +86,7 @@
                     requestedZipcode = ""
                 }
                 const templateUrl = buildEmailTweetTemplateUrl(legislator.id, requestedZipcode, "Email")
-                let template_data = (await restApiRequest('GET', templateUrl));
+                let template_data = (await restApi('GET', templateUrl));
 
                 subject = template_data.subject;
                 body = template_data.template;
@@ -105,7 +105,7 @@
 
             tweetButton.addEventListener('click', async function () {
                 const templateUrl = buildEmailTweetTemplateUrl(legislator.id, requestedZipcode, "Twitter")
-                let tweet_template = (await restApiRequest('GET', templateUrl)).template;
+                let tweet_template = (await restApi('GET', templateUrl)).template;
 
                 content_and_hashtags = tweet_template.split("#");
                 tweet_text = content_and_hashtags.shift().trim();
