@@ -109,8 +109,14 @@ const lookUpLegislators = async () => {
     };
 
     tweetButton.addEventListener('click', async function () {
+
+      const loader = card.querySelector('#card-loader');
+      loader.style.display = 'block';
+
       const templateUrl = buildEmailTweetTemplateUrl(legislator.id, requestedZipcode, "Twitter")
       let tweet_template = (await restApi('GET', templateUrl)).template;
+
+      loader.style.display = 'none';
 
       content_and_hashtags = tweet_template.split("#");
       tweet_text = content_and_hashtags.shift().trim();
@@ -130,7 +136,14 @@ const lookUpLegislators = async () => {
     });
 
     emailButton.addEventListener('click', async function () {
+
+      const loader = card.querySelector('#card-loader');
+      loader.style.display = 'block';
+
       const emailTemplateResult = await gatherEmailTemplates(legislator, requestedZipcode, openEmailApp = true);
+
+      loader.style.display = 'none';
+
       const emailTo = emailTemplateResult[0];
       const emailSubject = emailTemplateResult[1];
       const body = emailTemplateResult[2];
