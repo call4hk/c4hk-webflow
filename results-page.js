@@ -18,19 +18,24 @@ const lookUpLegislators = async () => {
   const searchParams = new URL(location.href).searchParams;
   if (location.href.match(/address=(\d+)/g)) {
     const addressInput = searchParams.get("address");
+    console.log('address lookup url', addressLookupUrl);
     legislatorResult = await restApi('POST', addressLookupUrl, { address: addressInput });
-
     // TODO 
     let matches = addressInput.match(/[0-9]{5}/g);
     requestedZipcode = matches && matches.length > 0 ? matches[matches.length - 1] : "";
   } else {
     requestedZipcode = searchParams.get("zipcode");
     const url = zipcodeLookupUrl + requestedZipcode.toString();
+    console.log('zipcode lookup url', url);
     legislatorResult = await restApi('GET', url);
   }
 
   const legislators = legislatorResult;
   const cardContainer = document.getElementById("Cards-Container");
+
+  // hide the loader
+  const loader = cardContainer.getElementById('results-loader');
+  loader.style.display = 'none';
 
   currentBills = await restApi('GET', currentBillsUrl);
   currentBillCode = []
