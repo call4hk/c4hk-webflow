@@ -34,7 +34,7 @@ const lookUpLegislators = async () => {
   const cardContainer = document.getElementById("Cards-Container");
 
   // hide the loader
-  const loader = cardContainer.getElementById('results-loader');
+  const loader = cardContainer.querySelector('results-loader');
   loader.style.display = 'none';
 
   currentBills = await restApi('GET', currentBillsUrl);
