@@ -220,7 +220,6 @@ const lookUpLegislators = async () => {
   });
 }
 
-// test commit
 (async () => {
   try {
     let find_legislator_button = document.querySelector("#find-button-nav");
