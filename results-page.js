@@ -110,11 +110,20 @@ const lookUpLegislators = async () => {
 
     tweetButton.addEventListener('click', async function () {
       const loader = card.querySelector('#card-loader');
-      loader.style.display = 'block';
+      loader.style.display = 'inline-block';
+      const errorText = card.querySelector('#error-text');
+      errorText.style.display = 'none';
 
       const templateUrl = buildEmailTweetTemplateUrl(legislator.id, requestedZipcode, "Twitter")
-      let tweet_template = (await restApi('GET', templateUrl)).template;
-      loader.style.display = 'none';
+      let tweet_template = undefined;
+      try {
+        tweet_template = (await restApi('GET', templateUrl)).template;
+      } catch (error) {
+        errorText.style.display = 'block';
+        return;
+      } finally {
+        loader.style.display = 'none';
+      }
 
       content_and_hashtags = tweet_template.split("#");
       tweet_text = content_and_hashtags.shift().trim();
@@ -135,10 +144,19 @@ const lookUpLegislators = async () => {
 
     emailButton.addEventListener('click', async function () {
       const loader = card.querySelector('#card-loader');
-      loader.style.display = 'block';
+      loader.style.display = 'inline-block';
+      const errorText = card.querySelector('#error-text');
+      errorText.style.display = 'none';
 
-      const emailTemplateResult = await gatherEmailTemplates(legislator, requestedZipcode, openEmailApp = true);
-      loader.style.display = 'none';
+      let emailTemplateResult = undefined;
+      try {
+        emailTemplateResult = await gatherEmailTemplates(legislator, requestedZipcode, openEmailApp = true);
+      } catch (error) {
+        errorText.style.display = 'block';
+        return;
+      } finally {
+        loader.style.display = 'none';
+      }
 
       const emailTo = emailTemplateResult[0];
       const emailSubject = emailTemplateResult[1];
@@ -155,9 +173,18 @@ const lookUpLegislators = async () => {
     modalLink.addEventListener('click', async function () {
       const loader = card.querySelector('#card-loader');
       loader.style.display = 'block';
+      const errorText = card.querySelector('#error-text');
+      errorText.style.display = 'none';
 
-      const emailTemplateResult = await gatherEmailTemplates(legislator, requestedZipcode);
-      loader.style.display = 'none';
+      let emailTemplateResult = undefined;
+      try {
+        emailTemplateResult = await gatherEmailTemplates(legislator, requestedZipcode);
+      } catch (error) {
+        errorText.style.display = 'block';
+        return;
+      } finally {
+        loader.style.display = 'none';
+      }
 
       const emailTo = emailTemplateResult[0];
       const emailSubject = emailTemplateResult[1];
