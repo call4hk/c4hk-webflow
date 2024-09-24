@@ -152,7 +152,6 @@ const lookUpLegislators = async () => {
       let emailTemplateResult = undefined;
       try {
         emailTemplateResult = await gatherEmailTemplates(legislator, requestedZipcode, openEmailApp = true);
-        throw new Error("test error");
       } catch (error) {
         errorText.style.display = 'block';
         return;
